@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <base target="_top">
+
+  <meta charset="UTF-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color"
+        content="#0B5ED7">
+
+  <meta name="mobile-web-app-capable"
+        content="yes">
+
+  <meta name="apple-mobile-web-app-capable"
+        content="yes">
+
+  <meta name="apple-mobile-web-app-status-bar-style"
+        content="default">
+
+  <meta name="apple-mobile-web-app-title"
+        content="TrueMeds">
+
+  <title>TrueMeds RTO & Reattempt Portal</title>
+
+  <?!= include("CSS"); ?>
+
+</head>
+
+<body>
+
+  <!-- =======================================================
+       Global Loader
+  ======================================================== -->
+
+  <div id="loaderOverlay" class="loader-overlay hidden">
+
+      <div class="loader-box">
+
+          <div class="loader-spinner"></div>
+
+          <div class="loader-text">
+
+              Please wait...
+
+          </div>
+
+      </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       Toast Notification Container
+  ======================================================== -->
+
+  <div id="toastContainer"></div>
+
+
+  <!-- =======================================================
+       Login Screen
+  ======================================================== -->
+
+  <section id="loginPage">
+
+      <?!= include("Login"); ?>
+
+  </section>
+
+
+  <!-- =======================================================
+       Main Application
+  ======================================================== -->
+
+  <div id="appContainer" class="hidden">
+
+      <!-- Sidebar -->
+
+      <?!= include("Sidebar"); ?>
+
+
+      <!-- Main Content -->
+
+      <main id="mainContent">
+
+          <section id="dashboardView" class="page hidden">
+
+              <?!= include("RiderDashboard"); ?>
+
+          </section>
+
+
+          <section id="submissionView" class="page hidden">
+
+              <?!= include("RiderSubmission"); ?>
+
+          </section>
+
+
+          <section id="mySubmissionView" class="page hidden">
+
+              <?!= include("MySubmissions"); ?>
+
+          </section>
+
+
+          <section id="pendingView" class="page hidden">
+
+              <?!= include("PendingRequests"); ?>
+
+          </section>
+
+
+          <section id="reviewView" class="page hidden">
+
+              <?!= include("ReviewRequest"); ?>
+
+          </section>
+
+
+          <section id="adminView" class="page hidden">
+
+              <?!= include("AdminDashboard"); ?>
+
+          </section>
+
+
+          <section id="repositoryView" class="page hidden">
+
+              <?!= include("AdminRepository"); ?>
+
+          </section>
+
+
+          <section id="notificationView" class="page hidden">
+
+              <?!= include("Notifications"); ?>
+
+          </section>
+
+
+          <section id="settingsView" class="page hidden">
+
+              <?!= include("Settings"); ?>
+
+          </section>
+
+      </main>
+
+  </div>
+
+
+  <!-- =======================================================
+       Dialog Container
+  ======================================================== -->
+
+  <div id="dialogContainer"></div>
+
+
+  <!-- =======================================================
+       JavaScript
+  ======================================================== -->
+
+  <?!= include("JavaScript"); ?>
+
+</body>
+
+</html>
