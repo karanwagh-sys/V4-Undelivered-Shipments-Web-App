@@ -1,0 +1,269 @@
+<!-- ============================================================
+     REVIEW REQUEST
+============================================================= -->
+
+<div id="reviewRequestContainer" class="page-container managerOnly hidden">
+
+    <!-- ===================================================== -->
+    <!-- Header -->
+    <!-- ===================================================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+
+                Review Request
+
+            </h1>
+
+            <p>
+
+                Review the selected rider submission.
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <button
+                id="btnBackPending"
+                class="secondary-btn">
+
+                Back
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- Submission Details -->
+    <!-- ===================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            Submission Details
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="details-grid">
+
+                <div>
+
+                    <label>Submission ID</label>
+
+                    <p id="reviewSubmissionId">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Order Number</label>
+
+                    <p id="reviewOrderNumber">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Rider Name</label>
+
+                    <p id="reviewRiderName">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Employee ID</label>
+
+                    <p id="reviewEmployeeId">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Zone</label>
+
+                    <p id="reviewZone">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Warehouse</label>
+
+                    <p id="reviewWarehouse">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>LM Hub</label>
+
+                    <p id="reviewLMHub">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Reason</label>
+
+                    <p id="reviewReason">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Status</label>
+
+                    <p id="reviewStatus">-</p>
+
+                </div>
+
+                <div>
+
+                    <label>Submitted On</label>
+
+                    <p id="reviewSubmittedOn">-</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- Uploaded Proofs -->
+    <!-- ===================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            Uploaded Proofs
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="preview-grid">
+
+                <div>
+
+                    <label>
+
+                        Mandatory Proof
+
+                    </label>
+
+                    <img
+                        id="reviewMandatoryProof"
+                        class="image-preview"
+                        src="">
+
+                </div>
+
+                <div>
+
+                    <label>
+
+                        Optional Proof
+
+                    </label>
+
+                    <img
+                        id="reviewOptionalProof"
+                        class="image-preview"
+                        src="">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- Review -->
+    <!-- ===================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            Review Decision
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="form-group">
+
+                <label>
+
+                    Hub Manager Remarks
+                    <span class="required">*</span>
+
+                </label>
+
+                <textarea
+                    id="txtManagerRemarks"
+                    class="form-control"
+                    rows="5"
+                    maxlength="500"
+                    placeholder="Enter remarks..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- Buttons -->
+    <!-- ===================================================== -->
+
+    <div class="button-row">
+
+        <button
+            id="btnApproveSubmission"
+            class="success-btn">
+
+            Approve
+
+        </button>
+
+        <button
+            id="btnRejectSubmission"
+            class="danger-btn">
+
+            Reject
+
+        </button>
+
+        <button
+            id="btnCancelReview"
+            class="secondary-btn">
+
+            Cancel
+
+        </button>
+
+    </div>
+
+</div>
