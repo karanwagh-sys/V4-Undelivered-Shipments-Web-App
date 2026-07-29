@@ -73,10 +73,15 @@ const Auth = (() => {
    * ============================================================
    */
 
-  function login(username, password) {
+function login(username, password) {
 
-    username = Utility.safeString(username);
-    password = Utility.safeString(password);
+  Logger.log("Username received: [" + username + "]");
+  Logger.log("Password received: [" + password + "]");
+  Logger.log("Password length: " + (password ? password.length : 0));
+
+  username = Utility.safeString(username);
+  password = Utility.safeString(password);
+
 
     let result;
 
@@ -102,7 +107,7 @@ const Auth = (() => {
     if (!verify(password, data.PASSWORD)) {
 
       const attempts =
-        Database.users.incrementFailedAttempts(user.row);
+        Database.users.incrementFailedAttempts(user);
 
       const maxAttempts =
         Number(Config.get("MAX_FAILED_LOGIN"));
@@ -348,5 +353,43 @@ function testAuthFindUser() {
   Logger.log(
     Auth.findUser("Karan")
   );
+
+}
+/**
+ * Hash all plain text passwords in User Master
+ * Run ONLY ONCE
+ */
+function hashAllUserPasswords() {
+
+  const sheet = SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getSheetByName("User Master");
+
+  const lastRow = sheet.getLastRow();
+
+  // Password is column B
+  const range = sheet.getRange(2, 2, lastRow - 1, 1);
+  const values = range.getValues();
+
+  for (let i = 0; i < values.length; i++) {
+
+    const password = String(values[i][0]).trim();
+
+    if (!password) continue;
+
+    // Skip if it already looks like SHA-256
+    if (/^[a-f0-9]{64}$/i.test(password)) {
+      continue;
+    }
+
+    values[i][0] = Auth.hash(password);
+
+  }
+
+  range.setValues(values);
+
+  SpreadsheetApp.flush();
+
+  Logger.log("All passwords hashed successfully.");
 
 }
