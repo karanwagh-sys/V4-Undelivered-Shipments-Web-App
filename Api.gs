@@ -381,3 +381,112 @@ const API = (() => {
   };
 
 })();
+/*************************************************************
+ * WEB APP WRAPPERS
+ *************************************************************/
+
+function login(username, password) {
+
+  Logger.log("API username = [" + username + "]");
+  Logger.log("API password = [" + password + "]");
+  Logger.log("API password length = " + (password ? password.length : 0));
+
+  return API.login(username, password);
+
+}
+
+function logout(username) {
+  return API.logout(username);
+}
+
+function validateSession(sessionId) {
+  return API.validateSession(sessionId);
+}
+
+function changePassword(username, oldPassword, newPassword) {
+  return API.changePassword(username, oldPassword, newPassword);
+}
+
+function createSubmission(data) {
+  return API.createSubmission(data);
+}
+
+function mySubmissions(username) {
+  return API.mySubmissions(username);
+}
+
+function getSubmission(id) {
+  return API.getSubmission(id);
+}
+
+function dashboardCounts(username) {
+  return API.dashboardCounts(username);
+}
+
+function userDashboard(username) {
+  return API.userDashboard(username);
+}
+
+function managerDashboard(username) {
+  return API.managerDashboard(username);
+}
+
+function adminDashboard(username) {
+  return API.adminDashboard(username);
+}
+
+function superAdminDashboard(username) {
+  return API.superAdminDashboard(username);
+}
+
+function notifications(username) {
+  return API.notifications(username);
+}
+
+function unreadNotificationCount(username) {
+  return API.unreadNotificationCount(username);
+}
+
+function markNotificationRead(id) {
+  return API.markNotificationRead(id);
+}
+
+function markAllNotificationsRead(username) {
+  return API.markAllNotificationsRead(username);
+}
+
+function searchOrder(orderNo) {
+  return API.searchOrder(orderNo);
+}
+
+function searchSubmission(id) {
+  return API.searchSubmission(id);
+}
+
+function searchEmployee(empId) {
+  return API.searchEmployee(empId);
+}
+
+function searchUsername(username) {
+  return API.searchUsername(username);
+}
+
+function uploadFile(base64, fileName) {
+  return API.uploadFile(base64, fileName);
+}
+
+function fileInformation(fileId) {
+  return API.fileInformation(fileId);
+}
+
+function deleteFile(fileId) {
+  return API.deleteFile(fileId);
+}
+
+function configuration() {
+  return API.configuration();
+}
+
+function appInfo() {
+  return API.appInfo();
+}
