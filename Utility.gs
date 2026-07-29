@@ -1,257 +1,398 @@
 /**
  * ============================================================
  * TRUE MEDS - RTO & REATTEMPT PORTAL
- * File      : Utility.gs
- * Purpose   : Common Utility Functions
+ * File      : Constants.gs
+ * Purpose   : Application Constants
  * Version   : 2.0.0
  * ============================================================
  */
 
-const Utility = (() => {
-
-  const TZ = Session.getScriptTimeZone();
-
-  /**
-   * ------------------------------------------------------------
-   * Current Date
-   * ------------------------------------------------------------
-   */
-  function now() {
-    return new Date();
-  }
-
-  /**
-   * ------------------------------------------------------------
-   * Format : DD/MM/YYYY
-   * ------------------------------------------------------------
-   */
-  function formatDate(date = now()) {
-    return Utilities.formatDate(date, TZ, "dd/MM/yyyy");
-  }
-
-  /**
-   * ------------------------------------------------------------
-   * Format : HH:mm:ss
-   * ------------------------------------------------------------
-   */
-  function formatTime(date = now()) {
-    return Utilities.formatDate(date, TZ, "HH:mm:ss");
-  }
-
-  /**
-   * ------------------------------------------------------------
-   * Format : DD/MM/YYYY HH:mm:ss
-   * ------------------------------------------------------------
-   */
-  function formatDateTime(date = now()) {
-    return Utilities.formatDate(date, TZ, "dd/MM/yyyy HH:mm:ss");
-  }
-
-  /**
-   * ------------------------------------------------------------
-   * Format : DD.MM.YYYY
-   * Used in Submission ID
-   * ------------------------------------------------------------
-   */
-  function formatIdDate(date = now()) {
-    return Utilities.formatDate(date, TZ, "dd.MM.yyyy");
-  }
-
-  /**
-   * ------------------------------------------------------------
-   * Safe String
-   * ------------------------------------------------------------
-   */
-  function safeString(value) {
 
-    if (value === null || value === undefined)
-      return "";
+/* ============================================================
+ * APP
+ * ============================================================ */
 
-    return String(value).trim();
-
-  }
-
-  /**
-   * ------------------------------------------------------------
-   * Safe Number
-   * ------------------------------------------------------------
-   */
-  function safeNumber(value) {
+const APP = {
 
-    const number = Number(value);
+  NAME: "RTO & Reattempt Portal",
 
-    return isNaN(number) ? 0 : number;
-
-  }
+  VERSION: "2.0.0",
 
-  /**
-   * ------------------------------------------------------------
-   * UUID
-   * ------------------------------------------------------------
-   */
-  function uuid() {
+  COMPANY: "TrueMeds"
 
-    return Utilities.getUuid();
-
-  }
+};
 
-  /**
-   * ------------------------------------------------------------
-   * Success Response
-   * ------------------------------------------------------------
-   */
-  function success(message = "", data = {}) {
 
-    return {
-      success: true,
-      message,
-      data
-    };
 
-  }
+/* ============================================================
+ * USER ROLES
+ * ============================================================ */
 
-  /**
-   * ------------------------------------------------------------
-   * Error Response
-   * ------------------------------------------------------------
-   */
-  function error(message = "", data = {}) {
+const ROLE = {
 
-    return {
-      success: false,
-      message,
-      data
-    };
+  RIDER: "Rider",
 
-  }
+  HUB_MANAGER: "Hub Manager",
 
-  /**
-   * ------------------------------------------------------------
-   * Generate Sequential ID
-   * Uses Script Properties + Lock Service
-   * ------------------------------------------------------------
-   */
-  function generateSequentialId(prefix) {
+  ADMIN: "Admin",
 
-    const lock = LockService.getScriptLock();
+  SUPER_ADMIN: "Super Admin"
 
-    lock.waitLock(30000);
+};
 
-    try {
 
-      const props = PropertiesService.getScriptProperties();
 
-      const today = formatIdDate();
+/* ============================================================
+ * USER STATUS
+ * ============================================================ */
 
-      const key = `${prefix}_${today}`;
+const STATUS = {
 
-      let counter = parseInt(props.getProperty(key), 10);
+  ACTIVE: "Active",
 
-      if (isNaN(counter))
-        counter = 0;
+  INACTIVE: "Inactive",
 
-      counter++;
+  LOCKED: "Locked"
 
-      props.setProperty(key, counter.toString());
+};
 
-      return `${prefix}-${today}-${String(counter).padStart(5, "0")}`;
 
-    } finally {
 
-      lock.releaseLock();
+/* ============================================================
+ * ACCESS SCOPE
+ * ============================================================ */
 
-    }
+const ACCESS_SCOPE = {
 
-  }
+  WAREHOUSE: "Warehouse",
 
-  /**
-   * ------------------------------------------------------------
-   * Submission ID
-   * ------------------------------------------------------------
-   */
-  function generateSubmissionId() {
+  ZONE: "Zone",
 
-    return generateSequentialId("SUB");
+  PAN_INDIA: "Pan India"
 
-  }
+};
 
-  /**
-   * ------------------------------------------------------------
-   * Notification ID
-   * ------------------------------------------------------------
-   */
-  function generateNotificationId() {
 
-    return generateSequentialId("NOT");
 
-  }
+/* ============================================================
+ * SUBMISSION STATUS
+ * ============================================================ */
 
-  /**
-   * ------------------------------------------------------------
-   * Public API
-   * ------------------------------------------------------------
-   */
-  return {
+const SUBMISSION_STATUS = {
 
-    now,
+  SUBMITTED: "Submitted",
 
-    formatDate,
-    formatTime,
-    formatDateTime,
-    formatIdDate,
+  UNDER_REVIEW: "Under Review",
 
-    safeString,
-    safeNumber,
+  APPROVED: "Approved",
 
-    uuid,
+  REJECTED: "Rejected",
 
-    success,
-    error,
+  REOPENED: "Reopened",
 
-    generateSubmissionId,
-    generateNotificationId
+  ARCHIVED: "Archived"
 
-  };
-  function safeBoolean(value) {
+};
 
-  if (typeof value === "boolean")
-    return value;
 
-  value = safeString(value).toLowerCase();
 
-  return value === "yes" ||
-         value === "true" ||
-         value === "1";
+/* ============================================================
+ * NOTIFICATION TYPE
+ * ============================================================ */
 
-}
-function isBlank(value) {
+const NOTIFICATION = {
 
-  return safeString(value) === "";
+  INFO: "Info",
 
-}
-function isNotBlank(value) {
+  SUCCESS: "Success",
 
-  return !isBlank(value);
+  WARNING: "Warning",
 
-}
-function clone(obj) {
+  ERROR: "Error",
 
-  return JSON.parse(
-    JSON.stringify(obj)
-  );
+  SYSTEM: "System"
 
-}
-function sleep(ms) {
+};
 
-  Utilities.sleep(ms);
 
-}
-function randomNumber(min, max) {
 
-  return Math.floor(
-    Math.random() * (max - min + 1)
-  ) + min;
+/* ============================================================
+ * ERROR MESSAGES
+ * ============================================================ */
 
-}
+const ERROR = {
 
-})();
+  INVALID_USERNAME:
+    "Please enter Username.",
+
+  INVALID_PASSWORD:
+    "Please enter Password.",
+
+  USER_NOT_FOUND:
+    "User not found.",
+  
+  FILE_REQUIRED: 
+    "Please select a file.",
+
+  FILE_NOT_FOUND:
+    "File not found.",
+
+  INVALID_FOLDER:
+    "Invalid Google Drive folder.",
+
+  ACCOUNT_LOCKED:
+    "Your account has been locked. Contact Administrator.",
+
+  ACCOUNT_INACTIVE:
+  "Your account is inactive. Please contact Administrator.",
+
+  INVALID_SESSION:
+  "Invalid session.",
+
+  SESSION_ALREADY_EXISTS:
+  "User is already logged in.",
+
+  ACCESS_DENIED:
+  "You are not authorized to access this page.",
+
+  SUBMISSION_NOT_FOUND:
+  "Submission not found.",
+
+  INVALID_REASON:
+  "Invalid reason selected.",
+
+  SESSION_EXPIRED:
+    "Your session has expired. Please login again.",
+
+  ORDER_REQUIRED:
+    "Order Number is required.",
+
+  INVALID_ORDER_NUMBER:
+    "Order Number should contain digits only.",
+
+  ORDER_MAX_LENGTH:
+    "Order Number cannot exceed 11 digits.",
+
+  INVALID_EMAIL:
+    "Invalid email address.",
+
+  INVALID_PHONE:
+    "Invalid mobile number.",
+
+  FILE_TOO_LARGE:
+    "Maximum upload size is 30 MB.",
+
+  INVALID_FILE_TYPE:
+    "Unsupported file type.",
+
+  UPLOAD_REQUIRED:
+    "Proof upload is required.",
+
+  REASON_NOT_ALLOWED:
+    "Selected reason is not allowed.",
+
+  UNKNOWN:
+    "Something went wrong."
+
+};
+
+
+
+/* ============================================================
+ * SUCCESS MESSAGES
+ * ============================================================ */
+
+const SUCCESS = {
+
+  LOGIN:
+    "Login successful.",
+
+  LOGOUT:
+    "Logged out successfully.",
+
+  PASSWORD_CHANGED:
+    "Password changed successfully.",
+
+  PASSWORD_RESET:
+    "Password reset successfully.",
+
+  PASSWORD_RESET_LINK:
+    "Password reset link sent to registered email.",
+
+  USER_UNLOCKED:
+    "User unlocked successfully.",
+
+  SUBMISSION_CREATED:
+    "Submission created successfully.",
+
+  SAVED:
+    "Saved successfully.",
+
+  UPDATED:
+    "Updated successfully.",
+
+  FILE_UPLOADED: 
+    "File uploaded successfully.",
+
+  FETCHED: 
+    "Details fetched successfully.",
+
+  COPIED:
+    "File copied successfully.",
+
+  MOVED:
+    "File moved successfully.",
+
+  DELETED:
+    "File deleted successfully.",
+
+};
+
+/* ============================================================
+ * SUPPORTED MIME TYPES
+ * ============================================================ */
+
+const SUPPORTED_MIME_TYPES = [
+
+  // Images
+
+  "image/jpeg",
+
+  "image/png",
+
+  "image/jpg",
+
+  "image/webp",
+
+  "image/heic",
+
+  "image/heif",
+
+  "image/gif",
+
+  "image/bmp",
+
+
+
+  // PDF
+
+  "application/pdf",
+
+
+
+  // Audio
+
+  "audio/mpeg",
+
+  "audio/mp3",
+
+  "audio/wav",
+
+  "audio/x-wav",
+
+  "audio/aac",
+
+  "audio/mp4",
+
+  "audio/ogg",
+
+  "audio/amr",
+
+  "audio/3gpp",
+
+
+
+  // Video
+
+  "video/mp4",
+
+  "video/quicktime",
+
+  "video/x-msvideo",
+
+  "video/x-matroska",
+
+  "video/webm",
+
+  "video/3gpp"
+
+];
+
+
+
+/* ============================================================
+ * SUPPORTED LANGUAGES
+ * ============================================================ */
+
+const LANGUAGES = [
+
+  "English",
+
+  "Hindi",
+
+  "Kannada",
+
+  "Tamil",
+
+  "Telugu",
+
+  "Malayalam",
+
+  "Marathi",
+
+  "Gujarati",
+
+  "Bengali",
+
+  "Punjabi",
+
+  "Odia",
+
+  "Assamese"
+
+];
+
+
+
+/* ============================================================
+ * THEME COLORS
+ * ============================================================ */
+
+const COLORS = {
+
+  PRIMARY: "#1565C0",
+
+  SUCCESS: "#2E7D32",
+
+  WARNING: "#F9A825",
+
+  ERROR: "#C62828",
+
+  INFO: "#0288D1",
+
+  LIGHT: "#F5F7FA",
+
+  DARK: "#263238",
+
+  WHITE: "#FFFFFF"
+
+};
+
+
+
+/* ============================================================
+ * REGEX
+ * ============================================================ */
+
+const REGEX = {
+
+  ORDER_NUMBER:
+    /^[0-9]{1,11}$/,
+
+  EMAIL:
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+
+  PHONE:
+    /^[0-9]{10}$/
+
+};
