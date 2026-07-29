@@ -4,33 +4,31 @@
 
 <aside id="sidebar" class="sidebar">
 
-    <!-- ==============================================
-         Logo
-    =============================================== -->
-
+    <!-- Logo -->
     <div class="sidebar-logo">
 
         <img
-            src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Truemeds_logo.png"
-            alt="TrueMeds">
+            src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*_-yhVmeDH2DDKPtq8hssZw.png"
+            alt="TrueMeds Logo"
+            class="sidebar-logo-img">
 
-        <h2>
+        <div class="sidebar-title">
 
-            RTO Portal
+            <h1>TrueMeds</h1>
 
-        </h2>
+            <p>RTO &amp; Reattempt Portal</p>
+
+        </div>
 
     </div>
 
 
-    <!-- ==============================================
-         Logged In User
-    =============================================== -->
-
+    <!-- Logged In User -->
     <div class="sidebar-user">
 
-        <div class="user-avatar"
-             id="userAvatar">
+        <div
+            class="user-avatar"
+            id="userAvatar">
 
             U
 
@@ -38,13 +36,17 @@
 
         <div class="user-details">
 
-            <div id="loggedUserName">
+            <div
+                id="loggedUserName"
+                class="user-name">
 
                 User Name
 
             </div>
 
-            <div id="loggedUserRole">
+            <div
+                id="loggedUserRole"
+                class="user-role">
 
                 Rider
 
@@ -55,129 +57,62 @@
     </div>
 
 
-    <!-- ==============================================
-         Navigation
-    =============================================== -->
-
+    <!-- Navigation -->
     <nav class="sidebar-menu">
 
-        <!-- Dashboard -->
+    <button class="menu-item active" id="menuDashboard" data-page="riderDashboard">
+        <span>📊</span>
+        <span>Dashboard</span>
+    </button>
 
-        <button
-            class="menu-item active"
-            id="menuDashboard">
+    <button class="menu-item" id="menuSubmission" data-page="riderSubmission">
+        <span>📦</span>
+        <span>New Submission</span>
+    </button>
 
-            📊 Dashboard
+    <button class="menu-item" id="menuMySubmissions" data-page="mySubmission">
+        <span>📋</span>
+        <span>My Submissions</span>
+    </button>
 
-        </button>
+    <button class="menu-item managerOnly hidden" id="menuPending" data-page="pendingRequest">
+        <span>⏳</span>
+        <span>Pending Requests</span>
+    </button>
 
+    <button class="menu-item managerOnly hidden" id="menuReview" data-page="reviewRequest">
+        <span>✅</span>
+        <span>Review Requests</span>
+    </button>
 
-        <!-- New Submission -->
+    <button class="menu-item adminOnly hidden" id="menuAdmin" data-page="adminDashboard">
+        <span>👨‍💼</span>
+        <span>Admin Dashboard</span>
+    </button>
 
-        <button
-            class="menu-item"
-            id="menuSubmission">
+    <button class="menu-item adminOnly hidden" id="menuRepository" data-page="adminRepository">
+        <span>📚</span>
+        <span>Repository</span>
+    </button>
 
-            📦 New Submission
+    <button class="menu-item" id="menuNotification" data-page="notifications">
+        <span>🔔</span>
+        <span>Notifications</span>
+        <span id="notificationBadge" class="badge hidden">0</span>
+    </button>
 
-        </button>
+    <button class="menu-item" id="menuSettings" data-page="settings">
+        <span>⚙</span>
+        <span>Settings</span>
+    </button>
 
-
-        <!-- My Submission -->
-
-        <button
-            class="menu-item"
-            id="menuMySubmissions">
-
-            📋 My Submissions
-
-        </button>
-
-
-        <!-- Pending Requests -->
-
-        <button
-            class="menu-item managerOnly hidden"
-            id="menuPending">
-
-            ⏳ Pending Requests
-
-        </button>
-
-
-        <!-- Review Request -->
-
-        <button
-            class="menu-item managerOnly hidden"
-            id="menuReview">
-
-            ✅ Review Requests
-
-        </button>
+   </nav>
 
 
-        <!-- Admin Dashboard -->
-
-        <button
-            class="menu-item adminOnly hidden"
-            id="menuAdmin">
-
-            👨‍💼 Admin Dashboard
-
-        </button>
-
-
-        <!-- Repository -->
-
-        <button
-            class="menu-item adminOnly hidden"
-            id="menuRepository">
-
-            📚 Repository
-
-        </button>
-
-
-        <!-- Notifications -->
-
-        <button
-            class="menu-item"
-            id="menuNotification">
-
-            🔔 Notifications
-
-            <span
-                id="notificationBadge"
-                class="badge hidden">
-
-                0
-
-            </span>
-
-        </button>
-
-
-        <!-- Settings -->
-
-        <button
-            class="menu-item"
-            id="menuSettings">
-
-            ⚙ Settings
-
-        </button>
-
-    </nav>
-
-
-    <!-- ==============================================
-         Footer
-    =============================================== -->
-
+    <!-- Footer -->
     <div class="sidebar-footer">
 
-        <div
-            id="appVersion">
+        <div id="appVersion">
 
             Version 1.0
 
