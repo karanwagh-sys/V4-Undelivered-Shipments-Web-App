@@ -26,6 +26,9 @@
 
   <meta name="apple-mobile-web-app-title"
         content="TrueMeds">
+  <link
+     rel="stylesheet"
+       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
   <title>TrueMeds RTO & Reattempt Portal</title>
 
@@ -36,24 +39,59 @@
 <body>
 
   <!-- =======================================================
-       Global Loader
-  ======================================================== -->
+     Global Loader
+======================================================== -->
 
-  <div id="loaderOverlay" class="loader-overlay hidden">
+<div id="loaderOverlay" class="loader-overlay hidden">
 
-      <div class="loader-box">
+    <div class="loader-box">
 
-          <div class="loader-spinner"></div>
+        <!-- Logo -->
 
-          <div class="loader-text">
+        <img
+            id="loaderLogo"
+            class="loader-logo"
+            src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*_-yhVmeDH2DDKPtq8hssZw.png"
+            alt="TrueMeds Logo">
 
-              Please wait...
+        <!-- Title -->
 
-          </div>
+        <h2 id="loaderTitle">
 
-      </div>
+            Welcome
 
-  </div>
+        </h2>
+
+        <!-- Message -->
+
+        <p id="loaderMessage">
+
+            Preparing your workspace...
+
+        </p>
+
+        <!-- Animated Dots -->
+
+        <div class="loader-dots">
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+        <!-- Footer -->
+
+        <div class="loader-footer">
+
+            Version 1.0
+
+        </div>
+
+    </div>
+
+</div>
 
 
   <!-- =======================================================
@@ -78,16 +116,13 @@
        Main Application
   ======================================================== -->
 
-  <div id="appContainer" class="hidden">
+  <div id="appContainer" class="app-layout hidden">
 
-      <!-- Sidebar -->
+    <?!= include("Sidebar"); ?>
 
-      <?!= include("Sidebar"); ?>
+    <div class="content-wrapper">
 
-
-      <!-- Main Content -->
-
-      <main id="mainContent">
+        <main id="mainContent" class="main-content">
 
           <section id="dashboardView" class="page hidden">
 
@@ -151,9 +186,11 @@
 
           </section>
 
-      </main>
+        </main>
 
-  </div>
+    </div>
+
+</div>
 
 
   <!-- =======================================================
