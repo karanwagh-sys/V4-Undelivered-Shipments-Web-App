@@ -41,24 +41,116 @@ document.addEventListener("DOMContentLoaded", initializeApplication);
 function initializeApplication(){
 
     initializeEvents();
-
+    initializePasswordToggle();
     validateSession();
+    loadRememberedUser();
+    
 
 }
 
+function initializePasswordToggle() {
 
+    const password =
+        document.getElementById("loginPassword");
 
+    const button =
+        document.getElementById("togglePassword");
+
+    const icon =
+        button?.querySelector(".material-symbols-outlined");
+
+    if (!password || !button || !icon) return;
+
+    button.addEventListener("click", () => {
+
+        if (password.type === "password") {
+
+            password.type = "text";
+            icon.textContent = "visibility_off";
+
+        } else {
+
+            password.type = "password";
+            icon.textContent = "visibility";
+
+        }
+
+    });
+
+}
+/* ==========================================================
+   REMEMBER USERNAME
+========================================================== */
+
+function loadRememberedUser() {
+
+    const username =
+        localStorage.getItem("rememberUsername");
+
+    const remember =
+        localStorage.getItem("rememberMe");
+
+    if (remember === "true" && username) {
+
+        document.getElementById("loginUsername").value = username;
+
+        document.getElementById("rememberMe").checked = true;
+
+    }
+
+}
+
+function saveRememberedUser(username) {
+
+    const remember =
+        document.getElementById("rememberMe").checked;
+
+    if (remember) {
+
+        localStorage.setItem("rememberUsername", username);
+
+        localStorage.setItem("rememberMe", "true");
+
+    } else {
+
+        localStorage.removeItem("rememberUsername");
+
+        localStorage.removeItem("rememberMe");
+
+    }
+
+}
 /* ==========================================================
    EVENTS
 ========================================================== */
 
-function initializeEvents(){
+function initializeEvents() {
 
     /* Login */
 
     document
         .getElementById("btnLogin")
         ?.addEventListener("click", login);
+
+    /* Login using Enter key */
+
+    ["loginUsername", "loginPassword"].forEach(id => {
+
+        document
+            .getElementById(id)
+            ?.addEventListener("keydown", function (e) {
+
+                if (e.key === "Enter") {
+
+                    e.preventDefault();
+
+                    login();
+
+                }
+
+            });
+
+    });
 
     /* Logout */
 
@@ -67,38 +159,46 @@ function initializeEvents(){
         ?.addEventListener("click", logout);
 
 }
-
-
-
 /* ==========================================================
-   LOADER
+   GLOBAL LOADER
 ========================================================== */
 
-function showLoader(){
+function showLoader(title = "Loading...", message = "Please wait...") {
 
     APP.loading = true;
 
-    document
-        .getElementById("loader")
+    const overlay = document.getElementById("loaderOverlay");
 
-        ?.classList.add("active");
+    if (!overlay) return;
+
+    const titleElement = document.getElementById("loaderTitle");
+    const messageElement = document.getElementById("loaderMessage");
+
+    if (titleElement) {
+        titleElement.textContent = title;
+    }
+
+    if (messageElement) {
+        messageElement.textContent = message;
+    }
+
+    overlay.classList.remove("hidden");
+    overlay.classList.add("active");
 
 }
 
-
-
-function hideLoader(){
+function hideLoader() {
 
     APP.loading = false;
 
-    document
-        .getElementById("loader")
+    const overlay = document.getElementById("loaderOverlay");
 
-        ?.classList.remove("active");
+    if (!overlay) return;
+
+    overlay.classList.remove("active");
+    overlay.classList.add("hidden");
 
 }
-
-
 
 /* ==========================================================
    TOAST
@@ -138,58 +238,65 @@ function showToast(message,type="info"){
     },4000);
 
 }
-
-
-
 /* ==========================================================
    PAGE NAVIGATION
 ========================================================== */
 
-function showPage(page){
+function showPage(page) {
+
+    // Hide all pages
+    document.querySelectorAll(".page").forEach(section => {
+        section.classList.add("hidden");
+    });
+
+    // Remove active menu
+    document.querySelectorAll(".menu-item").forEach(button => {
+        button.classList.remove("active");
+    });
+
+    const pageMap = {
+        riderDashboard: "dashboardView",
+        riderSubmission: "submissionView",
+        mySubmission: "mySubmissionView",
+        pendingRequest: "pendingView",
+        reviewRequest: "reviewView",
+        adminDashboard: "adminView",
+        adminRepository: "repositoryView",
+        notifications: "notificationView",
+        settings: "settingsView"
+    };
+
+    const view = document.getElementById(pageMap[page]);
+
+    if (view) {
+        view.classList.remove("hidden");
+    }
 
     document
-
-        .querySelectorAll(".page-container")
-
-        .forEach(pageElement=>{
-
-            pageElement.classList.remove("active");
-
-        });
-
-    document
-
-        .getElementById(page + "Container")
-
+        .querySelector(`[data-page="${page}"]`)
         ?.classList.add("active");
 
     APP.currentPage = page;
 
 }
 
-
-
 /* ==========================================================
    API
 ========================================================== */
 
-function server(functionName,...args){
+function server(functionName, ...args) {
 
-    return new Promise((resolve,reject)=>{
+    console.log("Calling Apps Script:", functionName);
+
+    return new Promise((resolve, reject) => {
 
         google.script.run
-
             .withSuccessHandler(resolve)
-
-            .withFailureHandler(reject)
-
-            [functionName](...args);
+            .withFailureHandler(reject)[functionName](...args);
 
     });
 
 }
-
-
 
 /* ==========================================================
    SESSION
@@ -224,8 +331,6 @@ async function validateSession(){
 
 }
 
-
-
 /* ==========================================================
    LOGIN SCREEN
 ========================================================== */
@@ -240,7 +345,7 @@ function showLogin(){
 
     document
 
-        .getElementById("mainContainer")
+        .getElementById("appContainer")
 
         ?.classList.add("hidden");
 
@@ -252,59 +357,81 @@ function showLogin(){
    AFTER LOGIN
 ========================================================== */
 
-function afterLogin(){
+function afterLogin() {
 
-    document
-
-        .getElementById("loginContainer")
-
-        ?.classList.add("hidden");
-
-    document
-
-        .getElementById("mainContainer")
-
-        ?.classList.remove("hidden");
+    document.getElementById("loginPage")?.classList.add("hidden");
+    document.getElementById("appContainer")?.classList.remove("hidden");
 
     loadLoggedInUser();
 
-    showPage("riderDashboard");
+    const role = (APP.user.role || "").toUpperCase();
+
+    if (role === "RIDER") {
+
+        navigate("riderDashboard");
+
+    } else if (role === "MANAGER" || role === "HUB_MANAGER") {
+
+        navigate("pendingRequest");
+
+    } else if (role === "ADMIN") {
+
+        navigate("adminDashboard");
+
+    } else {
+
+        navigate("riderDashboard");
+
+    }
 
 }
-
-
-
 /* ==========================================================
    USER
 ========================================================== */
 
 function loadLoggedInUser(){
 
-    if(!APP.user) return;
+    if (!APP.user) return;
 
-    document.getElementById("sidebarUserName").textContent =
-        APP.user.name;
+    const userName =
+        APP.user.name ||
+        APP.user.riderName ||
+        APP.user.username ||
+        "User";
 
-    document.getElementById("sidebarUserRole").textContent =
-        APP.user.role;
+    const userRole =
+        APP.user.role || "";
+
+    const nameElement =
+        document.getElementById("loggedUserName");
+
+    const roleElement =
+        document.getElementById("loggedUserRole");
+
+    if (nameElement) {
+        nameElement.textContent = userName;
+    }
+
+    if (roleElement) {
+        roleElement.textContent = userRole;
+    }
+
+    configureRoleMenus();
 
 }
-
-
-
 /* ==========================================================
    LOGIN
 ========================================================== */
 
-async function login(){
+async function login() {
 
     const username =
-        document.getElementById("txtUsername").value.trim();
+        document.getElementById("loginUsername").value.trim();
 
     const password =
-        document.getElementById("txtPassword").value;
+        document.getElementById("loginPassword").value;
 
-    if(!username){
+    if (!username) {
 
         showToast(
             "Username is required",
@@ -315,7 +442,7 @@ async function login(){
 
     }
 
-    if(!password){
+    if (!password) {
 
         showToast(
             "Password is required",
@@ -326,9 +453,14 @@ async function login(){
 
     }
 
-    try{
+    try {
 
-        showLoader();
+        /* Show Login Loader */
+
+        showLoader(
+            "Signing In...",
+            "Authenticating your account..."
+        );
 
         const response =
             await server(
@@ -337,22 +469,44 @@ async function login(){
                 password
             );
 
-        hideLoader();
+        if (response.success) {
 
-        if(response.success){
+            APP.session = response.data.sessionId;
+            APP.user = response.data;
 
-            APP.session = response.session;
+            saveRememberedUser(username);
 
-            APP.user = response.user;
+            /* Update Loader */
 
-            showToast(
-                "Login Successful",
-                "success"
+            showLoader(
+                `Welcome, ${APP.user.name || APP.user.username || username} 👋`,
+                "Preparing your workspace..."
             );
 
-            afterLogin();
+            setTimeout(() => {
 
-        }else{
+    console.log("Step 1");
+
+    showToast(
+        response.message,
+        "success"
+    );
+
+    console.log("Step 2");
+
+    afterLogin();
+
+    console.log("Step 3");
+
+    hideLoader();
+
+    console.log("Step 4");
+
+}, 1200);
+
+        } else {
+
+            hideLoader();
 
             showToast(
                 response.message,
@@ -361,21 +515,18 @@ async function login(){
 
         }
 
-    }catch(error){
+    } catch (error) {
 
         hideLoader();
 
         showToast(
-            error.message,
+            error.message || "Unable to login.",
             "error"
         );
 
     }
 
 }
-
-
-
 /* ==========================================================
    LOGOUT
 ========================================================== */
@@ -447,13 +598,13 @@ function navigate(page){
 
         case "mySubmission":
 
-            loadMySubmissions();
+            loadMySubmission();
 
             break;
 
         case "pendingRequest":
 
-            loadPendingRequests();
+            loadPendingRequest();
 
             break;
 
@@ -484,33 +635,6 @@ function navigate(page){
     }
 
 }
-
-
-
-/* ==========================================================
-   LOAD USER DETAILS
-========================================================== */
-
-function loadLoggedInUser(){
-
-    if(!APP.user){
-
-        return;
-
-    }
-
-    $("#sidebarUserName").textContent=APP.user.riderName;
-
-    $("#sidebarUserRole").textContent=APP.user.role;
-
-    $("#dashboardUserName").textContent=APP.user.riderName;
-
-    configureRoleMenus();
-
-}
-
-
-
 /* ==========================================================
    ROLE BASED MENUS
 ========================================================== */
@@ -592,9 +716,6 @@ function configureRoleMenus(){
     }
 
 }
-
-
-
 /* ==========================================================
    RIDER DASHBOARD
 ========================================================== */
@@ -605,16 +726,17 @@ async function loadRiderDashboard(){
 
         showLoader();
 
-        const response=
+        const response =
 
-            await server(
+    await server(
 
-                "dashboardCounts"
+        "dashboardCounts"
 
-            );
+    );
 
-        hideLoader();
+console.log("Dashboard Response:", response);
 
+hideLoader();
         if(!response.success){
 
             showToast(
@@ -655,8 +777,6 @@ async function loadRiderDashboard(){
 
 }
 
-
-
 /* ==========================================================
    DASHBOARD COUNTS
 ========================================================== */
@@ -683,8 +803,6 @@ function populateDashboardCounts(){
 
 }
 
-
-
 /* ==========================================================
    RECENT SUBMISSIONS
 ========================================================== */
@@ -697,7 +815,7 @@ async function loadRecentSubmissions(){
 
             await server(
 
-                "mySubmissions"
+                "mySubmission"
 
             );
 
@@ -1365,31 +1483,27 @@ async function submitRequest(){
     }
 
 }
-
-
-
 /* ==========================================================
    CLEAR FORM
 ========================================================== */
 
 function clearSubmissionForm(){
 
-    $("#txtOrderNumber").value="";
+    console.log("txtOrderNumber", $("#txtOrderNumber"));
+    console.log("ddlReason", $("#ddlReason"));
+    console.log("mandatoryProof", $("#mandatoryProof"));
+    console.log("optionalProof", $("#optionalProof"));
+    console.log("mandatoryPreview", $("#mandatoryPreview"));
+    console.log("optionalPreview", $("#optionalPreview"));
 
-    $("#ddlReason").selectedIndex=0;
-
-    $("#mandatoryProof").value="";
-
-    $("#optionalProof").value="";
-
-    $("#mandatoryPreview").src="";
-
-    $("#optionalPreview").src="";
+    $("#txtOrderNumber").value = "";
+    $("#ddlReason").selectedIndex = 0;
+    $("#mandatoryProof").value = "";
+    $("#optionalProof").value = "";
+    $("#mandatoryPreview").src = "";
+    $("#optionalPreview").src = "";
 
 }
-
-
-
 /* ==========================================================
    EVENTS
 ========================================================== */
@@ -1459,13 +1573,13 @@ $("#btnResetSubmission")?.addEventListener(
    MY SUBMISSIONS
 ========================================================== */
 
-async function loadMySubmissions(){
+async function loadMySubmission(){
 
     try{
 
         showLoader();
 
-        const response=await server("mySubmissions");
+        const response=await server("mySubmission");
 
         hideLoader();
 
@@ -1477,7 +1591,7 @@ async function loadMySubmissions(){
 
         }
 
-        renderMySubmissions(response.data);
+        renderMySubmission(response.data);
 
     }
 
@@ -1493,7 +1607,7 @@ async function loadMySubmissions(){
 
 
 
-function renderMySubmissions(data){
+function renderMySubmission(data){
 
     const tbody=$("#mySubmissionTableBody");
 
@@ -1628,7 +1742,7 @@ async function openSubmission(submissionId){
    PENDING REQUESTS
 ========================================================== */
 
-async function loadPendingRequests(){
+async function loadPendingRequest(){
 
     try{
 
@@ -1638,7 +1752,7 @@ async function loadPendingRequests(){
 
             await server(
 
-                "pendingRequests"
+                "pendingRequest"
 
             );
 
@@ -1658,7 +1772,7 @@ async function loadPendingRequests(){
 
         }
 
-        renderPendingRequests(
+        renderPendingRequest(
 
             response.data
 
@@ -1684,7 +1798,7 @@ async function loadPendingRequests(){
 
 
 
-function renderPendingRequests(data){
+function renderPendingRequest(data){
 
     const tbody=$("#pendingTableBody");
 
@@ -1992,7 +2106,7 @@ async function submitReview(status){
 
         );
 
-        loadPendingRequests();
+        loadPendingRequest();
 
         navigate(
 
@@ -2161,7 +2275,7 @@ function populateAdminDashboard(data){
 
         data.total||0;
 
-    $("#adminPendingRequests").textContent=
+    $("#adminPendingRequest").textContent=
 
         data.pending||0;
 
@@ -2850,15 +2964,15 @@ function refreshCurrentPage(){
 
             break;
 
-        case "mySubmissions":
+        case "mySubmission":
 
-            loadMySubmissions();
+            loadMySubmission();
 
             break;
 
-        case "pendingRequests":
+        case "pendingRequest":
 
-            loadPendingRequests();
+            loadPendingRequest();
 
             break;
 
@@ -3068,13 +3182,13 @@ $("#btnRefreshDashboard")
 
 
 
-$("#btnRefreshMySubmissions")
+$("#btnRefreshMySubmission")
 
 ?.addEventListener(
 
     "click",
 
-    loadMySubmissions
+    loadMySubmission
 
 );
 
@@ -3086,7 +3200,7 @@ $("#btnRefreshPending")
 
     "click",
 
-    loadPendingRequests
+    loadPendingRequest
 
 );
 
@@ -3181,9 +3295,6 @@ $("#txtRepositorySearch")
     }
 
 );
-
-
-
 /* ==========================================================
    QUICK ACTIONS
 ========================================================== */
@@ -3208,7 +3319,7 @@ $("#quickNewSubmission")
 
 
 
-$("#quickMySubmissions")
+$("#quickMySubmission")
 
 ?.addEventListener(
 
@@ -3218,7 +3329,7 @@ $("#quickMySubmissions")
 
         navigate(
 
-            "mySubmissions"
+            "mySubmission"
 
         );
 
@@ -3238,7 +3349,7 @@ $("#quickPending")
 
         navigate(
 
-            "pendingRequests"
+            "pendingRequest"
 
         );
 
@@ -3305,25 +3416,6 @@ window.addEventListener(
     }
 
 );
-
-
-
-/* ==========================================================
-   APPLICATION START
-========================================================== */
-
-window.addEventListener(
-
-    "load",
-
-    function(){
-
-        initializeApplication();
-
-    }
-
-);
-
 
 
 /* ==========================================================
